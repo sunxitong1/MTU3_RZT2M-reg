@@ -138,14 +138,17 @@ void R_MTU3_Create(void)
     /* A/D converter start request setting */
   //  R_MTU4->TIER_b.TTGE2 = 1;   /* A/D converter start request generation by MTU4.TCNT underflow (trough) enabled */
     /* Interrupt setting */
-    R_MTU3->TIER_b.TGIEA = 1;   /* Interrupt requests (TCIV) enabled */
+    R_MTU4->TIER_b.TCIEV = 1;   /* Interrupt requests (TCIV) enabled */
     /* DSM trigger setting */
 
 	    /* Configure the interrupts */
-    R_BSP_IrqDisable(VECTOR_NUMBER_TGIA3);
-    R_BSP_IrqCfg(VECTOR_NUMBER_TGIA3, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
-    R_BSP_IrqEnable(VECTOR_NUMBER_TGIA3);
-	
+//    R_BSP_IrqDisable(VECTOR_NUMBER_TGIA3);
+//    R_BSP_IrqCfg(VECTOR_NUMBER_TGIA3, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
+//    R_BSP_IrqEnable(VECTOR_NUMBER_TGIA3);
+
+	 R_BSP_IrqDisable(VECTOR_NUMBER_TCIV4);
+    R_BSP_IrqCfg(VECTOR_NUMBER_TCIV4, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
+    R_BSP_IrqEnable(VECTOR_NUMBER_TCIV4);
 
     __asm volatile ("cpsie i");
     __asm volatile ("isb");
@@ -181,8 +184,8 @@ void R_MTU3_C3_Start(void)
 
 void R_MTU3_C3_4_Enable_Output(void)
 {
-//    R_MTU->TOERA = 0xFF;    /* MTU output is enabled */
-	R_MTU->TOERA = 0x31;    /* MTU output is enabled */
+    R_MTU->TOERA = 0xFF;    /* MTU output is enabled */
+	
     //R_MTU->TCSYSTR |= 0x18;//Specifies synchronous start for MUT3.TCNT & MUT4.TCNT
     R_MTU->TSTRA = 0xC0;//Specifies synchronous start for MUT3.TCNT & MUT4.TCNT
 }
@@ -251,12 +254,28 @@ void hal_entry(void)
     while(1)
     	{
 
-//		cnt_reg  = R_MTU4->TCNT;
-//		if(cnt_reg == 0)
+		    if(pwm_enable_flag == 0x11)
+    		{
+	
+				R_PORT_SR->P[19]  = (uint8_t) ((R_PORT_SR->P[19])  | (0x40));
+				R_MTU->TOCR1A_b.TOCS = 1;   	/* TOCR1 setting is selected */
+				R_MTU->TOLBRA_b.OLS1P = 0;	 	/* Initial output:H, Active level:L */
+				R_MTU->TOLBRA_b.OLS1N = 0;	 	/* Initial output:H, Active level:L */
+				
+				R_MTU->TOLBRA_b.OLS2P = 0;	 	/* Initial output:H, Active level:L */
+				R_MTU->TOLBRA_b.OLS2N = 0;	 	/* Initial output:H, Active level:L */
+				
+				R_MTU->TOLBRA_b.OLS3P = 0;	 	/* Initial output:H, Active level:L */
+				R_MTU->TOLBRA_b.OLS3N = 0;	 	/* Initial output:H, Active level:L */
+				R_BSP_SoftwareDelay(delay, delay_unit);
+				R_MTU->TOERA = 0x31;    		/* MTU output is enabled */
+
+    		}
+					
+
 			
     		if(pwm_enable_flag == 2)
     		{
-//    			pwm_out_p_high();
 	
 			R_PORT_SR->P[19]  = (uint8_t) ((R_PORT_SR->P[19])  | (0x40));
 
@@ -275,7 +294,6 @@ void hal_entry(void)
     		}
 			else if(pwm_enable_flag == 3)//high level
 			{
-//					pwm_out_p_low();
 				R_PORT_SR->P[19]  = (uint8_t) ((R_PORT_SR->P[19]) & (0xBF));
 				R_MTU->TOCR1A_b.TOCS = 1;	/* TOCR1 setting is selected */
 

@@ -10,7 +10,7 @@
         /* ISR prototypes */
 void r_mtu_tgiv3_interrupt(void);
 
-#define VECTOR_NUMBER_TGIA3 ((IRQn_Type) 84) /* TGIA3 (MTU3.TGRA input capture/compare match) */
+#define VECTOR_NUMBER_TCIV4 ((IRQn_Type) 93) /* TGIA3 (MTU3.TGRA input capture/compare match) */
 
 /* Vector table allocations */
         typedef enum IRQn {
@@ -37,7 +37,8 @@ void r_mtu_tgiv3_interrupt(void);
             HypervisorTimerInt = -6,
             VirtualTimerInt = -5,
             NonSecurePhysicalTimerInt = -2,
-            TGIA3_IRQn = 84, /* TGIA3 (MTU3.TGRA input capture/compare match) */
+//            TGIA3_IRQn = 84, /* TGIA3 (MTU3.TGRA input capture/compare match) */
+			TCIV4_IRQn = 93, /* TGIA3 (MTU3.TGRA input capture/compare match) */
             SHARED_PERIPHERAL_INTERRUPTS_MAX_ENTRIES = BSP_VECTOR_TABLE_MAX_ENTRIES
         } IRQn_Type;
         #endif /* VECTOR_DATA_H */
