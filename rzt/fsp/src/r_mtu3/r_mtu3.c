@@ -28,7 +28,7 @@
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-
+volatile uint8_t inter_event = 0;
 /* "MTU3" in ASCII, used to determine if channel is open. */
 #define MTU3_OPEN                           (0x4D545533ULL)
 
@@ -1903,9 +1903,19 @@ void mtu3_capture_w_isr (void)
     r_mtu3_capture_common_isr(MTU3_PRV_CAPTURE_EVENT_W);
 }
 
-void r_mtu_tgiv3_interrupt(void)
+void r_mtu4_tcive_interrupt(void)
 {
+	if(R_MTU4->TSR_b.TCFU == 1)
+		inter_event = 0x10;
+	else if(R_MTU4->TSR_b.TCFV == 1)
+		inter_event = 0x20;
+		
     commutate_foc(&motor_1);
 }
+
+void r_mtu3_tcive_interrupt(void)
+{
+    inter_event = 0x30;
+    }
 
 

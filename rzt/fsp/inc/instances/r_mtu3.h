@@ -396,8 +396,10 @@ fsp_err_t R_MTU3_CallbackSet(timer_ctrl_t * const          p_api_ctrl,
 fsp_err_t R_MTU3_Close(timer_ctrl_t * const p_ctrl);
 fsp_err_t R_MTU3_VersionGet(fsp_version_t * const p_version);
 
-void r_mtu_tgiv3_interrupt(void);
+void r_mtu4_tcive_interrupt(void);
 
+
+void r_mtu3_tcive_interrupt(void);
 
 /*******************************************************************************************************************//**
  * @} (end defgroup MTU3)

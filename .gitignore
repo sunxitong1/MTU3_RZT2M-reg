@@ -65,6 +65,6 @@ obj/
 
 build/
 Debug/
-motor_mtu3.si4project/
+*.si4project/
 Release/
 .settings/
