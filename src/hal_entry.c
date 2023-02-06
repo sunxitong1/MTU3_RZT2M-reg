@@ -36,6 +36,7 @@ void R_MTU3_Create(void);
 void pwm_out_p_high(void);
 void pwm_out_p_low(void);
 void R_IO_Create(void);
+void R_MTU3_IO_int(void);
 
 
 
@@ -230,7 +231,7 @@ void hal_entry(void)
     period_set_l.tgrb_counts = 0;
 	
 //IO config	
-	R_BSP_PinAccessEnable();
+	R_MTU3_IO_int();
 
 //RTU3 config
 	R_MTU3_Create();
@@ -360,6 +361,38 @@ void hal_entry(void)
 
 }
 
+void R_MTU3_IO_int(void)
+{
+	R_BSP_PinAccessEnable();						// Unlock Register Write Protection
+
+	//NONE SAFE 
+	//	R_PTADR->RSELP_b[18].RS1 = 0;
+	//	R_PTADR->RSELP_b[17].RS6 = 0;
+	//phase U 
+	R_PORT_SR->PMC_b[17].PMC7 = 1;					//
+	R_PORT_SR->PFC_b[17].PFC7 = 0x00;				//MTIOC4A<-->P17-7
+	R_PORT_SR->PMC_b[18].PMC0 = 1;					//
+	R_PORT_SR->PFC_b[18].PFC0 = 0x00;				//MTIOC4C<-->P18-0
+
+	//phase V 
+	R_PORT_SR->PMC_b[18].PMC2 = 1;					//
+	R_PORT_SR->PFC_b[18].PFC2 = 0x00;				//MTIOC4B<-->P17-7
+	R_PORT_SR->PMC_b[18].PMC3 = 1;					//
+	R_PORT_SR->PFC_b[18].PFC3 = 0x01;				//MTIOC4D<-->P18-2
+
+	//phase W 
+	R_PORT_SR->PMC_b[17].PMC6 = 1;					//
+	R_PORT_SR->PFC_b[17].PFC6 = 0x0;				//MTIOC3B<-->P18-0
+	R_PORT_SR->PMC_b[18].PMC1 = 1;					//
+	R_PORT_SR->PFC_b[18].PFC1 = 0x01;				//MTIOC3D<-->P18-1
+
+
+	R_BSP_PinAccessDisable();						// Lock Register Write Protection
+
+
+}
+
+
 /*******************************************************************************************************************//**
  * This function is called at various points during the startup process.  This implementation uses the event that is
  * called right before main() to set up the pins.
@@ -373,6 +406,6 @@ void R_BSP_WarmStart(bsp_warm_start_event_t event)
         /* C runtime environment and system clocks are setup. */
 
         /* Configure pins. */
-        R_IOPORT_Open (&g_ioport_ctrl, &g_bsp_pin_cfg);
+//        R_IOPORT_Open (&g_ioport_ctrl, &g_bsp_pin_cfg);
     }
 }
