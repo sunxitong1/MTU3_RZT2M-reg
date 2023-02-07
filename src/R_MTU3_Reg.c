@@ -35,114 +35,151 @@
 
 void R_PWM_Create(void)
 {
-    volatile unsigned long dummy;
-	//DI();
-	__asm volatile ("cpsid i"); /* Disable IRQ interrupt (Set CPSR.I bit to 1)  */
-	  __asm volatile ("isb");
-
-    /* Cancel MTU stop state in LPC */
-    dummy=1u;
-    R_BSP_RegisterProtectDisable(BSP_REG_PROTECT_LPC_RESET);
-    R_BSP_MODULE_START(FSP_IP_MTU3, dummy);
-    dummy = BSP_MSTP_REG_FSP_IP_MTU3(dummy);
-    dummy = R_MTU5->TSTR;   /* Dummy-read for the module-stop state(2) */
-	R_BSP_RegisterProtectEnable(BSP_REG_PROTECT_LPC_RESET);
-
-
-    R_MTU->TRWERA_b.RWE = 1U; // Read/write access to the registers is enabled    MTU3 and MTU4
-    R_MTU->TRWERB_b.RWE = 1U;
-
-    
-    /* Stop all channels */
-    R_MTU->TSTRA = 0x00;
-    R_MTU5->TSTR = 0x00;
-    R_MTU->TSTRB = 0x00;
-
-    /* Set external clock noise filter */
-    R_MTU_NF->NFCRC = 0x1f;//0x3f;/* The noise filter for the MTCLKABCD pin is enabled;Noise Filter Clock PCLKH/32*/
-
-
-    //R_MTU->TMDR2A = 1;
-    //R_MTU->TMDR2B = 1; 
-    
-    /* Channel 3-4 Complementary PWM mode 2 */
-    /* -Stop count operation- */
-    R_MTU->TSTRA_b.CST3 = 0;
-    R_MTU->TSTRA_b.CST4 = 0;
-    /* -Counter clock, counter clear source selection- */
-    R_MTU3->TCR = 0x00;     /* counts on PCLKH/1, Count at rising edge, TCNT clearing disabled */
-    R_MTU3->TCR2 = 0x00;    /* counts on PCLKH/1 */
-    R_MTU4->TCR = 0x00;     /* counts on PCLKH/1, Count at rising edge, TCNT clearing disabled */
-    R_MTU4->TCR2 = 0x00;    /* counts on PCLKH/1 */
-    /* -TCNT setting- */
-    R_MTU3->TCNT = MTR_TDEAD_CNT_NUM;
-    R_MTU4->TCNT = 0;
-    /* -Inter-channel synchronization setting- */
-    R_MTU->TSYRA |= 0x00;   /* MTU3.TCNT and MTU4.TCNT operates independently */
-    
-    R_MTU3->TGRB = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* U-phase output compare register */
-    R_MTU4->TGRA = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* V-phase output compare register */
-    R_MTU4->TGRB = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* W-phase output compare register */
-    R_MTU3->TGRD = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* U-phase output buffer register */
-    R_MTU4->TGRC = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* V-phase output buffer register */
-    R_MTU4->TGRD = MTR_TC_4_CNT_NUM + MTR_TDEAD_CNT_NUM/2;    /* W-phase output buffer register */
-    /* -Dead time, carrier cycle setting- */
-    R_MTU->TDDRA = MTR_TDEAD_CNT_NUM;
-    R_MTU->TCDRA = MTR_TC_HALF_CNT_NUM;
-
-    
-    R_MTU3->TGRA = MTR_TC_HALF_CNT_NUM  + MTR_TDEAD_CNT_NUM;
-    R_MTU3->TGRC = MTR_TC_HALF_CNT_NUM + MTR_TDEAD_CNT_NUM;
-    
-    /* -Enable PWM cyclic output, set PWM output level- */
-    R_MTU->TOCR1A_b.TOCL = 0;   /* Write access to the TOCS, OLSN, and OLSP bits is enabled */
-    R_MTU->TOCR1A_b.PSYE = 0;   /* Toggle output is disabled */
-    R_MTU->TOCR1A_b.TOCS = 0;   /* TOCR1 setting is selected */
-    R_MTU->TOCR1A_b.OLSP = 1;   /* Initial output:H, Active level:L */
-    R_MTU->TOCR1A_b.OLSN = 1;   /* Initial output:H, Active level:L */
-    
-    /* -Complementary PWM mode setting- */
-    R_MTU3->TMDR1_b.MD = 0xD;   /* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
-
+		R_BSP_RegisterProtectDisable(BSP_REG_PROTECT_LPC_RESET);
+		R_BSP_MODULE_START(FSP_IP_MTU3, 1);
+		R_BSP_MODULE_START(FSP_IP_MTU3, 2);
+		R_BSP_MODULE_START(FSP_IP_MTU3, 3);
+		R_BSP_MODULE_START(FSP_IP_MTU3, 4);
+		//dummy = BSP_MSTP_REG_FSP_IP_MTU3(dummy);
+		//dummy = R_MTU5->TSTR;   /* Dummy-read for the module-stop state(2) */
+		R_BSP_RegisterProtectEnable(BSP_REG_PROTECT_LPC_RESET);
+	
+		R_MTU->TRWERA_b.RWE = 1U; // Read/write access to the registers is enabled	  MTU3 and MTU4
+//		R_MTU->TRWERB_b.RWE = 1U;
+		
+	
+		
+		/* Stop all channels */
+		R_MTU->TSTRA = 0x00;
+		R_MTU5->TSTR = 0x00;
+		R_MTU->TSTRB = 0x00;
+	
+		/* Set external clock noise filter */
+		R_MTU_NF->NFCRC = 0x1f;//0x3f;/* The noise filter for the MTCLKABCD pin is enabled;Noise Filter Clock PCLKH/32*/
 #if 0
-    R_MTU3->TMDR1_b.BFA = 0;    /* 立即更新 */
-    R_MTU3->TMDR1_b.BFB = 0;    /* 立即更新 */
-#else
-    R_MTU3->TMDR1_b.BFA = 1;    /* TGRA and TGRC used together for buffer operation */
-    R_MTU3->TMDR1_b.BFB = 1;    /* TGRB and TGRD used together for buffer operation */
+		/* Channel 1 is used as phase counting mode 1 */
+		R_MTU1->TCR = 0x00; 	/* TCNT clearing disabled */
+	//	  R_MTU1->TCR_b.TPSC = 1;
+		R_MTU1->TIOR = 0x88;	/* IOA:Input capture at rising edge IOB:Input capture at rising edge */
+		R_MTU1->TIER = 0x00;	/* TGIEA:disable TGIEB:disable TCIEU:disable TCIEV:disable TTGE:disable */
+		R_MTU1->TMDR1 = 0x04;	/* Phase counting mode 1 */
+		R_MTU->TSYRA |= 0x00;	/* MTU1.TCNT operates independently */
+		R_MTU->TSTRA_b.CST1 = 1;
+	//#else
+		/* Channel 2 is used as phase counting mode 1 */
+		R_MTU2->TCR = 0x00; 	/* TCNT clearing disabled */
+	//	  R_MTU2->TCR_b.TPSC = 1;
+		R_MTU2->TIOR = 0x88;	/* IOA:Input capture at rising edge IOB:Input capture at rising edge */
+		R_MTU2->TIER = 0x00;	/* TGIEA:disable TGIEB:disable TCIEU:disable TCIEV:disable TTGE:disable */
+		R_MTU2->TMDR1 = 0x04;	/* Phase counting mode 1 */
+		R_MTU1->TMDR3_b.LWA = 0;   /* 16-bit access is enabled */
+		R_MTU1->TMDR3_b.PHCKSEL = 1;   /* MTCLKC and MTCLKD are selected for the external phase clock */
+		R_MTU->TSYRA |= 0x00;	/* MTU2.TCNT operates independently */
+		R_MTU->TSTRA_b.CST2 = 1;
 #endif
-    //R_MTU4->TMDR1_b.BFA = 1;    /* TGRA and TGRC used together for buffer operation */
-   // R_MTU4->TMDR1_b.BFB = 1;    /* TGRB and TGRD used together for buffer operation */
+	
+		//R_MTU->TMDR2A = 1;
+		//R_MTU->TMDR2B = 1; 
+		
+		/* Channel 3-4 Complementary PWM mode 2 */
+		/* -Stop count operation- */
+		R_MTU->TSTRA_b.CST3 = 0;
+		R_MTU->TSTRA_b.CST4 = 0;
+		/* -Counter clock, counter clear source selection- */
+		R_MTU3->TCR = 0x00; 	/* counts on PCLKH/1, Count at rising edge, TCNT clearing disabled */
+		R_MTU3->TCR2 = 0x00;	/* counts on PCLKH/1 */
+		R_MTU4->TCR = 0x00; 	/* counts on PCLKH/1, Count at rising edge, TCNT clearing disabled */
+		R_MTU4->TCR2 = 0x00;	/* counts on PCLKH/1 */
+		/* -TCNT setting- */
+		R_MTU3->TCNT = 0;
+		R_MTU4->TCNT = 0;
+		/* -Inter-channel synchronization setting- */
+		R_MTU->TSYRA |= 0x00;	/* MTU3.TCNT and MTU4.TCNT operates independently */
+		
+		R_MTU3->TGRB = MTR_TC_4_CNT_NUM/2 + MTR_TDEAD_CNT_NUM/2;	/* U-phase output compare register */
+		R_MTU4->TGRA = MTR_TC_4_CNT_NUM/4 + MTR_TDEAD_CNT_NUM/2;	/* V-phase output compare register */
+		R_MTU4->TGRB = MTR_TC_4_CNT_NUM/8 + MTR_TDEAD_CNT_NUM/2;	/* W-phase output compare register */
+		
+		R_MTU3->TGRD = MTR_TC_4_CNT_NUM/2 + MTR_TDEAD_CNT_NUM/2;	/* U-phase output buffer register */
+		R_MTU4->TGRC = MTR_TC_4_CNT_NUM/4 + MTR_TDEAD_CNT_NUM/2;	/* V-phase output buffer register */
+		R_MTU4->TGRD = MTR_TC_4_CNT_NUM/8 + MTR_TDEAD_CNT_NUM/2;	/* W-phase output buffer register */
 
-//    /* A/D converter start request setting */
-//    R_MTU4->TIER_b.TTGE2 = 1;   /* A/D converter start request generation by MTU4.TCNT underflow (trough) enabled */
-//    /* Interrupt setting */
-//    R_MTU3->TIER_b.TGIEA = 1;   /* Interrupt requests (TCIV) enabled */
+		/* -Dead time, carrier cycle setting- */
+		R_MTU->TDDRA = MTR_TDEAD_CNT_NUM;
+		R_MTU->TCDRA = 0;
+		
+		
+		R_MTU3->TGRA = MTR_TC_HALF_CNT_NUM;//	+ MTR_TDEAD_CNT_NUM;
+		R_MTU3->TGRC = MTR_TC_HALF_CNT_NUM;// + MTR_TDEAD_CNT_NUM;
 
-
-
-
-//    R_MTU->TOCR1A_b.PSYE = 1;
-//    R_MTU->TOERA = 0xC0;
-//    
-//    /* Synchronous Start */
-//    R_MTU->TCSYSTR |= 0x1B;
-
-
-//    R_MTU3->TGRC = 10000 + R_MTU->TDDRA;
-//    R_MTU->TCBRA = 10000;
-//    R_MTU3->TGRD = 300 + (R_MTU->TDDRA/2);    /* U-phase output buffer register */
-//    R_MTU4->TGRC = 4000 + (R_MTU->TDDRA/2);    /* V-phase output buffer register */
-//    R_MTU4->TGRD = 6000 + (R_MTU->TDDRA/2);    /* W-phase output buffer register */
-
-    R_MTU->TOERA = 0xFF;//output enable
-    R_MTU->TSTRA = 0xC0;//Specifies synchronous start for MUT3.TCNT & MUT4.TCNT
-
-//    R_BSP_IrqDisable(VECTOR_NUMBER_TCIV4);
-//    R_BSP_IrqCfg(VECTOR_NUMBER_TCIV4, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
-//    R_BSP_IrqEnable(VECTOR_NUMBER_TCIV4);
-	__asm volatile ("cpsie i");
-	   __asm volatile ("isb");
+		
+		/* -Enable PWM cyclic output, set PWM output level- */
+		R_MTU->TOCR1A_b.TOCL = 0;	/* Write access to the TOCS, OLSN, and OLSP bits is enabled */
+		R_MTU->TOCR1A_b.PSYE = 0;	/* Toggle output is disabled */
+		R_MTU->TOCR1A_b.TOCS = 0;	/* TOCR1 setting is selected */
+		R_MTU->TOCR1A_b.OLSP = 1;	/* Initial output:H, Active level:L */
+		R_MTU->TOCR1A_b.OLSN = 1;	/* Initial output:H, Active level:L */
+		
+		/* -Complementary PWM mode setting- */
+		R_MTU3->TMDR1_b.MD = 0xF;	/* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
+	
+#if 0
+		R_MTU3->TMDR1_b.BFA = 0;	/* 立即更新 */
+		R_MTU3->TMDR1_b.BFB = 0;	/* 立即更新 */
+#else
+		R_MTU3->TMDR1_b.BFA = 1;	/* TGRA and TGRC used together for buffer operation */
+		R_MTU3->TMDR1_b.BFB = 1;	/* TGRB and TGRD used together for buffer operation */
+#endif
+		//R_MTU4->TMDR1_b.BFA = 1;	  /* TGRA and TGRC used together for buffer operation */
+	   // R_MTU4->TMDR1_b.BFB = 1;	  /* TGRB and TGRD used together for buffer operation */
+	
+		/* A/D converter start request setting */
+//		R_MTU4->TIER_b.TTGE2 = 1;	/* A/D converter start request generation by MTU4.TCNT underflow (trough) enabled */
+//		/* Interrupt setting */
+//		R_MTU3->TIER_b.TGIEA = 1;	/* Interrupt requests (TCIV) enabled */
+	
+#if 0
+		//R_POE3_Create();
+		/* Set MTU/GPT pin function selection and high-impedance control pin selection*/
+		R_POE3->M3SELR	= _POE_MTU3B_PIN_P00_6 | _POE_MTU3D_PIN_P01_1;
+		R_POE3->M4SELR1 = _POE_MTU4A_PIN_P00_7 | _POE_MTU4C_PIN_P01_0;
+		R_POE3->M4SELR2 = _POE_MTU4B_PIN_P01_2 | _POE_MTU4D_PIN_P01_3;	  
+	
+		/* Input level control/status for POE#0 */
+		R_POE3->ICSR1 = _POE_POE0M_SEL_8;
+		
+		/* Set POE#0 occur PWM output level*/
+		R_POE3->ALR1_b.OLSEN = 1;			/* Enable active level setting, revised for 220V motor*/
+		R_POE3->ALR1 |= 0x003F; 			/* Active High, revised for 220V motor */
+		R_POE3->ALR1_b.OLSEN = 0;			/* Disable active level setting, revised for 220V motor*/
+	
+		/* Set extend the control conditions for MTU3, MTU4, MTU6 and MTU7 */
+		R_POE3->POECR4 = _POE_IC2ADDMT34ZE_ENABLE | _POE_POECR4_DEFAULT;
+		
+		/* Port Output Enable Control setting */
+		R_POE3->POECR2 = _POE_MTU4BDZE_ENABLE | _POE_MTU4ACZE_ENABLE | _POE_MTU3BDZE_ENABLE;
+	
+		R_POE3->ICSR1_b.POE0F = 0;
+		R_POE3->ICSR1_b.PIE1 = 1;
+	
+#endif
+	
+	
+		R_MTU->TOCR1A_b.PSYE = 1;
+		R_MTU->TOERA = 0xC0;
+		
+		/* Synchronous Start */
+		R_MTU->TCSYSTR |= 0x1B;
+	
+	
+//		R_MTU3->TGRC = 10000 + R_MTU->TDDRA;
+//		R_MTU->TCBRA = 10000;
+//		R_MTU3->TGRD = 300 + (R_MTU->TDDRA/2);	  /* U-phase output buffer register */
+//		R_MTU4->TGRC = 4000 + (R_MTU->TDDRA/2);    /* V-phase output buffer register */
+//		R_MTU4->TGRD = 6000 + (R_MTU->TDDRA/2);    /* W-phase output buffer register */
+	
+		R_MTU->TOERA = 0xFF;
+//		R_MTU->TSTRA = 0xC0;//Specifies synchronous start for MUT3.TCNT & MUT4.TCNT
 
 }
 
