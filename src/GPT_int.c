@@ -77,12 +77,12 @@ void R_GPT123_Create(void)
 	R_GPT1->GTDTCR_b.TDFER = 1; 					//The value written to GTDVU register is automatically set to GTDVD register
 	R_GPT1->GTDVU = 0x320;							//dead time 2us
 
-	//interrupt enable
-	R_GPT1->GTINTAD_b.GTINTPR = 1;
-	/* Configure the interrupts */
-	R_BSP_IrqDisable(VECTOR_NUMBER_GPT1_OVF);
-	R_BSP_IrqCfg(VECTOR_NUMBER_GPT1_OVF, GPT1_OVERFLOW_PRIORITY_LEVEL, (NULL));
-	R_BSP_IrqEnable(VECTOR_NUMBER_GPT1_OVF);
+//	//interrupt enable
+//	R_GPT1->GTINTAD_b.GTINTPR = 1;
+//	/* Configure the interrupts */
+//	R_BSP_IrqDisable(VECTOR_NUMBER_GPT1_OVF);
+//	R_BSP_IrqCfg(VECTOR_NUMBER_GPT1_OVF, GPT1_OVERFLOW_PRIORITY_LEVEL, (NULL));
+//	R_BSP_IrqEnable(VECTOR_NUMBER_GPT1_OVF);
 
 	//Start timer
 	R_GPT1->GTCR_b.CST = 1;
@@ -96,11 +96,6 @@ void R_GPT123_Create(void)
 void R_GPT123_IO_int(void)
 {
 	R_BSP_PinAccessEnable();						// Unlock Register Write Protection
-
-	//NONE SAFE 
-	//	R_PTADR->RSELP_b[18].RS1 = 0;
-	//	R_PTADR->RSELP_b[17].RS6 = 0;
-	//phase U 
 
 
 	R_BSP_PinAccessDisable();						// Lock Register Write Protection

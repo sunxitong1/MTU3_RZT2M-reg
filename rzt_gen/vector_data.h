@@ -11,8 +11,10 @@
 
 
 void gpt_counter_overflow_isr(void);
+void MTU3_CH3_TGIA_isr(void);
 
 #define VECTOR_NUMBER_GPT1_OVF ((IRQn_Type) 131) /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+#define VECTOR_NUMBER_TGIA3 ((IRQn_Type) 85)
 
 /* Vector table allocations */
         typedef enum IRQn {
@@ -39,7 +41,9 @@ void gpt_counter_overflow_isr(void);
             HypervisorTimerInt = -6,
             VirtualTimerInt = -5,
             NonSecurePhysicalTimerInt = -2,
-			GPT1_OVF_IRQn = 131, /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+//			GPT1_OVF_IRQn = 131, /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+			MTU3_TGID_IRQn = 85, /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+
             SHARED_PERIPHERAL_INTERRUPTS_MAX_ENTRIES = BSP_VECTOR_TABLE_MAX_ENTRIES
         } IRQn_Type;
         #endif /* VECTOR_DATA_H */

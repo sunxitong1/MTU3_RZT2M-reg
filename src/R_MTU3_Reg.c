@@ -32,6 +32,9 @@
 #define MTU_TGIV3_PRIORITY_LEVEL    (2) /* The lower the value, the higher the priority of the corresponding interrupt(0-31) */
 #define MTU_TCIV3_PRIORITY_LEVEL    (1) /* The lower the value, the higher the priority of the corresponding interrupt(0-31) */
 
+uint16_t MTU3_cnt = 0;
+uint16_t MTU3_compare_value = 0;
+
 
 void R_PWM_Create(void)
 {
@@ -102,7 +105,8 @@ void R_PWM_Create(void)
     R_MTU->TOCR1A_b.OLSN = 1;   /* Initial output:H, Active level:L */
     
     /* -Complementary PWM mode setting- */
-    R_MTU3->TMDR1_b.MD = 0xD;   /* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
+    R_MTU3->TMDR1_b.MD = 0xE;   /* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
+    R_MTU4->TMDR1_b.MD = 0xE;   /* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
 
 #if 0
     R_MTU3->TMDR1_b.BFA = 0;    /* 立即更新 */
@@ -128,6 +132,11 @@ void R_PWM_Create(void)
 //    /* Synchronous Start */
 //    R_MTU->TCSYSTR |= 0x1B;
 
+	R_MTU3->TIER_b.TGIEB = 1;
+	R_BSP_IrqDisable(VECTOR_NUMBER_TGIA3);
+	R_BSP_IrqCfg(VECTOR_NUMBER_TGIA3, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
+	R_BSP_IrqEnable(VECTOR_NUMBER_TGIA3);
+
 
 //    R_MTU3->TGRC = 10000 + R_MTU->TDDRA;
 //    R_MTU->TCBRA = 10000;
@@ -138,9 +147,8 @@ void R_PWM_Create(void)
     R_MTU->TOERA = 0xFF;//output enable
     R_MTU->TSTRA = 0xC0;//Specifies synchronous start for MUT3.TCNT & MUT4.TCNT
 
-//    R_BSP_IrqDisable(VECTOR_NUMBER_TCIV4);
-//    R_BSP_IrqCfg(VECTOR_NUMBER_TCIV4, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
-//    R_BSP_IrqEnable(VECTOR_NUMBER_TCIV4);
+
+    
 	__asm volatile ("cpsie i");
 	   __asm volatile ("isb");
 
@@ -282,10 +290,10 @@ void R_MTU3_Create(void)
 //    R_BSP_IrqCfg(VECTOR_NUMBER_TGIA3, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
 //    R_BSP_IrqEnable(VECTOR_NUMBER_TGIA3);
 
-//	R_BSP_IrqDisable(VECTOR_NUMBER_TCIV4);
+//	R_BSP_IrqDisable(VECTOR_NUMBER_TGIV4);
 //    R_BSP_IrqCfg(VECTOR_NUMBER_TCIV4, MTU_TGIV3_PRIORITY_LEVEL, (NULL));
 //    R_BSP_IrqEnable(VECTOR_NUMBER_TCIV4);
-//
+
 //	R_BSP_IrqDisable(VECTOR_NUMBER_TCIV3);
 //    R_BSP_IrqCfg(VECTOR_NUMBER_TCIV3, MTU_TCIV3_PRIORITY_LEVEL, (NULL));
 //    R_BSP_IrqEnable(VECTOR_NUMBER_TCIV3);
@@ -294,6 +302,36 @@ void R_MTU3_Create(void)
     __asm volatile ("cpsie i");
     __asm volatile ("isb");
 
+}
+
+
+void MTU3_CH3_TGIA_isr(void)
+{
+//	R_PORT_SR->P[19] = (uint8_t) ((R_PORT_SR->P[19]) ^ (0x40));
+	uint16_t temp = 0;
+	if (++MTU3_cnt >= 10000)
+    {
+    	temp = MTU3_cnt;// + (R_MTU->TDDRA>>1);
+    	if(temp > 6250)
+    	{
+    		temp = 6250;
+    		MTU3_cnt = 0;
+    	}
+    	MTU3_cnt = 0;
+
+//		R_MTU3->TGRD = temp; 
+		R_MTU4->TGRC = MTU3_compare_value; 
+		R_MTU4->TGRD = MTU3_compare_value; 
+		
+//		R_MTU4->TGRD = temp; 
+//		R_MTU3->TGRB = temp; 
+//		R_MTU4->TGRA = temp; 
+//		R_MTU4->TGRB = temp; 
+
+		
+    }
+//    else
+//		MTU3_cnt = 0;
 }
 
 
