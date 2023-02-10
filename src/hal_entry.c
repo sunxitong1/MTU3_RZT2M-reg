@@ -1,5 +1,8 @@
 #include "hal_data.h"
 #include "vector_data.h"
+#include "R_MTU3_Reg.h"
+#include "R_POE3_Reg.h"
+
 
 
 FSP_CPP_HEADER
@@ -17,9 +20,9 @@ uint16_t debugdata = 0;
 uint16_t debugdata1 = 0;
 
 #define MTR_TC_CNT_NUM          (12500) /* Carrier cycle time 50[us] */
-#define MTR_TC_HALF_CNT_NUM     (6250)
+#define MTR_TC_HALF_CNT_NUM     (6250)	//MTU3 CLK 200M
 #define MTR_TC_4_CNT_NUM        (3125)
-#define MTR_TDEAD_CNT_NUM       (10)//(200)   /* Dead Time 1[us] */
+#define MTR_TDEAD_CNT_NUM       (10)	//(200)   /* Dead Time 1[us] */
 
 #define MTU_TGIV3_PRIORITY_LEVEL    (2) /* The lower the value, the higher the priority of the corresponding interrupt(0-31) */
 #define MTU_TCIV3_PRIORITY_LEVEL    (1) /* The lower the value, the higher the priority of the corresponding interrupt(0-31) */
@@ -108,10 +111,12 @@ void hal_entry(void)
     period_set_l.tgrb_counts = 0;
 	
 //IO config	
-	R_MTU3_IO_int();
+//	R_MTU3_IO_int();
+	R_POE3_IO_int();
 
-//RTU3 config
+
 	R_MTU3_Create();
+	R_POE3_int();
 	R_MTU3_C3_4_Enable_Output();
 	duty_change_flag = 0;
 	//R_MTU->TOLBRB_b.
@@ -189,43 +194,7 @@ void hal_entry(void)
 			}
     	
     	}
-//        {
-//
-//        if(pwm_enable_flag == 1)
-//        {
-//            pwm_enable_flag = 0;
-//            R_MTU3_C3_4_Enable_Output();
-//        }
-//        else if(pwm_enable_flag == 4)
-//        {
-//            pwm_enable_flag = 0;
-//            R_MTU3_C3_4_Disable_Output();
-//        }
-//            if(duty_change_flag == 3)
-//                {
-//                    duty_change_flag = 0;
-//                    duty_cycle.duty[0] = duty_set;
-//                    duty_cycle.duty[1] = duty_set;
-//                    duty_cycle.duty[2] = duty_set;
-//                    R_MTU3_THREE_PHASE_DutyCycleSet(&g_three_phase0_ctrl, &duty_cycle);
-//                    //R_MTU3->TGRD = duty_set + MTR_TDEAD_CNT_NUM/2;    /* U-phase output buffer register */
-//                    //R_MTU4->TGRC = duty_set + MTR_TDEAD_CNT_NUM/2;    /* V-phase output buffer register */
-//                    //R_MTU4->TGRD = duty_set + MTR_TDEAD_CNT_NUM/2;    /* W-phase output buffer register */
-//
-//                }
-//            else if(duty_change_flag == 4)
-//                {
-//                    duty_change_flag = 0;
-//                    period_set_l.tgra_counts = period_set;
-//                    period_set_l.tgrb_counts = 0;
-//                    R_MTU3_PeriodSet (&g_three_phase0_ctrl, &period_set_l);
-//                }
-//            debugdata++;
-//            if(debugdata%1000 == 0)
-//                debugdata1++;
-//
-//
-//        }
+
 
 		while(1)
 		{

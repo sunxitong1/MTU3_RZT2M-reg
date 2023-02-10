@@ -3,22 +3,7 @@
 #include "R_MTU3_Reg.h"
 //#include "bsp_irq.h"
 
-#define _POE_MTU3B_PIN_P00_6 0x01
-#define _POE_MTU3D_PIN_P01_1 0x10
 
-#define _POE_MTU4A_PIN_P00_7 0x01
-#define _POE_MTU4C_PIN_P01_0 0x10
-
-#define _POE_MTU4B_PIN_P01_2 0x01
-#define _POE_MTU4D_PIN_P01_3 0x10
-
-#define _POE_POE0M_SEL_8 0x01 
-
-#define _POE_IC2ADDMT34ZE_ENABLE 0x40
-
-#define _POE_MTU4BDZE_ENABLE 0x100
-#define _POE_MTU4ACZE_ENABLE 0x200
-#define _POE_MTU3BDZE_ENABLE 0x400
 
 #define MTR_TC_CNT_NUM          (13612)//(12500) /* Carrier cycle time 50[us] */
 #define MTR_TC_HALF_CNT_NUM     (6806)//(6250)
@@ -53,13 +38,13 @@ void R_MTU3_IO_int(void)
 
 	//phase V 
 	R_PORT_SR->PMC_b[18].PMC2 = 1;					//
-	R_PORT_SR->PFC_b[18].PFC2 = 0x00;				//MTIOC4B<-->P17-7
+	R_PORT_SR->PFC_b[18].PFC2 = 0x00;				//MTIOC4B<-->P18-2
 	R_PORT_SR->PMC_b[18].PMC3 = 1;					//
-	R_PORT_SR->PFC_b[18].PFC3 = 0x01;				//MTIOC4D<-->P18-2
+	R_PORT_SR->PFC_b[18].PFC3 = 0x01;				//MTIOC4D<-->P18-3
 
 	//phase W 
 	R_PORT_SR->PMC_b[17].PMC6 = 1;					//
-	R_PORT_SR->PFC_b[17].PFC6 = 0x0;				//MTIOC3B<-->P18-0
+	R_PORT_SR->PFC_b[17].PFC6 = 0x0;				//MTIOC3B<-->P17-6
 	R_PORT_SR->PMC_b[18].PMC1 = 1;					//
 	R_PORT_SR->PFC_b[18].PFC1 = 0x01;				//MTIOC3D<-->P18-1
 

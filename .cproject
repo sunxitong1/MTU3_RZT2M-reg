@@ -434,16 +434,16 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="motor_control_mtu3.com.renesas.cdt.managedbuild.gcc.rz.projectType.update.1695887997" name="可执行文件" projectType="com.renesas.cdt.managedbuild.gcc.rz.projectType.update"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="com.renesas.cdt.managedbuild.gcc.rz.configuration.release.update.429982374;com.renesas.cdt.managedbuild.gcc.rz.configuration.release.update.429982374.;com.renesas.cdt.managedbuild.gcc.rz.tool.compilerC.594351529;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1637884821">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.renesas.cdt.managedbuild.gcc.rz.configuration.debug.update.5969766;com.renesas.cdt.managedbuild.gcc.rz.configuration.debug.update.5969766.;com.renesas.cdt.managedbuild.gcc.rz.tool.compilerC.98060405;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.770768621">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.renesas.cdt.managedbuild.gcc.rz.configuration.debug.update.378136998;com.renesas.cdt.managedbuild.gcc.rz.configuration.debug.update.378136998.;com.renesas.cdt.managedbuild.gcc.rz.tool.compilerC.391565721;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.265051282">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.renesas.cdt.managedbuild.gcc.rz.configuration.release.update.562672489;com.renesas.cdt.managedbuild.gcc.rz.configuration.release.update.562672489.;com.renesas.cdt.managedbuild.gcc.rz.tool.compilerC.650959852;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.2108356493">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
 </cproject>
