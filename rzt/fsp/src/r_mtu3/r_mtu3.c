@@ -23,7 +23,6 @@
  **********************************************************************************************************************/
 #include "r_mtu3_cfg.h"
 #include "r_mtu3.h"
-#include "Foc.h"
 
 /***********************************************************************************************************************
  * Macro definitions
@@ -1910,7 +1909,6 @@ void r_mtu4_tcive_interrupt(void)
 	else if(R_MTU4->TSR_b.TCFV == 1)
 		inter_event = 0x20;
 		
-    commutate_foc(&motor_1);
 }
 
 void r_mtu3_tcive_interrupt(void)

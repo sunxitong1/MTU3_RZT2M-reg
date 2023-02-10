@@ -2,7 +2,7 @@
         #ifndef VECTOR_DATA_H
         #define VECTOR_DATA_H
         #include "bsp_api.h"
-		#include "Foc.h"
+
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
         #define VECTOR_DATA_IRQ_COUNT    (2)
