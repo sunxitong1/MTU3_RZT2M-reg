@@ -34,7 +34,6 @@
 *.i*86
 *.x86_64
 *.hex
-*.xml
 
 # Debug files
 *.dSYM/
@@ -67,4 +66,3 @@ build/
 Debug/
 *.si4project/
 Release/
-.settings/

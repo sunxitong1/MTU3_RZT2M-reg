@@ -174,18 +174,10 @@ const ioport_pin_cfg_t g_bsp_pin_cfg_data[] =
           | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P166_PFC_02_RXD0_SCL0_MISO0) },
   { .pin = BSP_IO_PORT_17_PIN_5, .pin_cfg = ((uint32_t) IOPORT_CFG_PORT_PERI
           | (uint32_t) IOPORT_PIN_P175_PFC_05_USB_OVRCUR) },
-  { .pin = BSP_IO_PORT_17_PIN_6, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_PIN_P176_PFC_00_MTIOC3B) },
-  { .pin = BSP_IO_PORT_17_PIN_7, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P177_PFC_00_MTIOC4A) },
-  { .pin = BSP_IO_PORT_18_PIN_0, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P180_PFC_00_MTIOC4C) },
-  { .pin = BSP_IO_PORT_18_PIN_1, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_PIN_P181_PFC_01_MTIOC3D) },
-  { .pin = BSP_IO_PORT_18_PIN_2, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_PIN_P182_PFC_00_MTIOC4B) },
-  { .pin = BSP_IO_PORT_18_PIN_3, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PORT_PERI
-          | (uint32_t) IOPORT_PIN_P183_PFC_01_MTIOC4D) },
+  { .pin = BSP_IO_PORT_17_PIN_7, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_HIGH | (uint32_t) IOPORT_CFG_PORT_PERI
+          | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P177_PFC_04_RXD3_SCL3_MISO3) },
+  { .pin = BSP_IO_PORT_18_PIN_0, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_HIGH | (uint32_t) IOPORT_CFG_PORT_PERI
+          | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P180_PFC_04_TXD3_SDA3_MOSI3) },
   { .pin = BSP_IO_PORT_18_PIN_4, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_HIGH | (uint32_t) IOPORT_CFG_PORT_PERI
           | (uint32_t) IOPORT_CFG_SLEW_RATE_FAST | (uint32_t) IOPORT_PIN_P184_PFC_03_SPI_RSPCK2) },
   { .pin = BSP_IO_PORT_18_PIN_5, .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_HIGH | (uint32_t) IOPORT_CFG_PORT_PERI

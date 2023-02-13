@@ -17,7 +17,7 @@
 
 volatile short test = 0;
 
-uint32_t s16u_cnt = 0;
+uint16_t s16u_cnt = 0;
 
 void R_GPT123_Create(void)
 {
@@ -112,7 +112,7 @@ void R_GPT123_IO_int(void)
 void gpt_counter_overflow_isr(void)
 {
 //	R_PORT_SR->P[19] = (uint8_t) ((R_PORT_SR->P[19]) ^ (0x40));
-	uint32_t temp = 0;
+	uint16_t temp = 0;
 	if (++s16u_cnt <= 10000)
     {
     	temp = s16u_cnt;// + (R_MTU->TDDRA>>1);

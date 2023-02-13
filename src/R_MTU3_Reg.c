@@ -1,5 +1,6 @@
 #include "hal_data.h"
 #include "vector_data.h"
+#include "R_MTU3_Reg.h"
 //#include "bsp_irq.h"
 
 #define _POE_MTU3B_PIN_P00_6 0x01

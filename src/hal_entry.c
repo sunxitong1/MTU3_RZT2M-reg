@@ -1,14 +1,14 @@
 #include "hal_data.h"
 #include "vector_data.h"
 #include "R_MTU3_Reg.h"
+#include "GPT_int.h"
+
 
 
 FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event)
 BSP_PLACE_IN_SECTION(".warm_start");
 FSP_CPP_FOOTER
-three_phase_duty_cycle_t duty_cycle;
-mtu3_counter_t period_set_l;
 
 uint16_t duty_change_flag = 0;
 uint32_t duty_set = 0;
@@ -94,22 +94,9 @@ void hal_entry(void)
 {
     /* TODO: add your own code here */
     //MSTPCRA register Bit0 Clear
-    uint32_t delay_unit = 1000;
-    uint32_t delay;
-	volatile uint16_t cnt_reg = 3;
-	delay = delay_unit >> 1;
 	pwm_enable_flag = 0;
 	
     *((unsigned long*)0x80280308)&=0xFFFFFFFEu;
-    duty_cycle.duty[0] = 0;
-    duty_cycle.duty[1] = 0;
-    duty_cycle.duty[2] = 0;
-
-    duty_cycle.duty_buffer[0] = 0;
-    duty_cycle.duty_buffer[1] = 0;
-    duty_cycle.duty_buffer[2] = 0;
-    period_set_l.tgra_counts = 0;
-    period_set_l.tgrb_counts = 0;
 	
 //IO config	
 	R_BSP_PinAccessEnable();
