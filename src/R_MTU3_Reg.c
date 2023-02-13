@@ -20,10 +20,7 @@
 #define _POE_MTU4ACZE_ENABLE 0x200
 #define _POE_MTU3BDZE_ENABLE 0x400
 
-#define MTR_TC_CNT_NUM          (13612)//(12500) /* Carrier cycle time 50[us] */
-#define MTR_TC_HALF_CNT_NUM     (6806)//(6250)
-#define MTR_TC_4_CNT_NUM        (3403)//(3125)
-#define MTR_TDEAD_CNT_NUM       (10)//(200)   /* Dead Time 1[us] */
+
 
 
 //#define MTR_TC_4_CNT_NUM 0x1000
@@ -47,8 +44,6 @@ void R_PWM_Create(void)
 	
 		R_MTU->TRWERA_b.RWE = 1U; // Read/write access to the registers is enabled	  MTU3 and MTU4
 //		R_MTU->TRWERB_b.RWE = 1U;
-		
-	
 		
 		/* Stop all channels */
 		R_MTU->TSTRA = 0x00;
@@ -124,7 +119,7 @@ void R_PWM_Create(void)
 		/* -Complementary PWM mode setting- */
 		R_MTU3->TMDR1_b.MD = 0xF;	/* 0x0F 双更新、0x0E 过零更新、0x0D 周期更新 */
 	
-#if 0
+#if CMP_UPDATE_DIRECTLY
 		R_MTU3->TMDR1_b.BFA = 0;	/* 立即更新 */
 		R_MTU3->TMDR1_b.BFB = 0;	/* 立即更新 */
 #else

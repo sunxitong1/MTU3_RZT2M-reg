@@ -11,6 +11,7 @@
 #include "GPT_int.h"
 #include "hal_data.h"
 #include "vector_data.h"
+#include "R_MTU3_Reg.h"
 
 #define GPT1_OVERFLOW_PRIORITY_LEVEL (10) /* The lower the value, the higher the priority of the corresponding interrupt(0-31) */
 #define GPT1_UNDERFLOW_PRIORITY_LEVEL (11)
@@ -18,6 +19,7 @@
 volatile short test = 0;
 
 uint16_t s16u_cnt = 0;
+
 
 void R_GPT123_Create(void)
 {
@@ -47,8 +49,8 @@ void R_GPT123_Create(void)
 
 	R_GPT1->GTCR_b.MD = 0x05;						//triangle-wave PWM mode 2
 	R_GPT1->GTCR_b.TPCS = 0x00; 					//Core Clock/1---GPT clock 400M
-	R_GPT1->GTPR = 0x927C0;	//0x61A80--2ms						//period---16K
-	R_GPT1->GTPBR = 0x927C0; 						//period buffer
+	R_GPT1->GTPR = 0x61A80; 						//0x61A80--2ms						//period---16K
+	R_GPT1->GTPBR = 0x61A80;						//period buffer
 
 	R_GPT1->GTCNT = 0x00;							//CNT Clear;
 
@@ -101,40 +103,51 @@ void R_GPT123_IO_int(void)
 	//	R_PTADR->RSELP_b[18].RS1 = 0;
 	//	R_PTADR->RSELP_b[17].RS6 = 0;
 	//phase U 
-
-
 	R_BSP_PinAccessDisable();						// Lock Register Write Protection
 
 
 }
 
+
 //2ms interrupt
 void gpt_counter_overflow_isr(void)
 {
-//	R_PORT_SR->P[19] = (uint8_t) ((R_PORT_SR->P[19]) ^ (0x40));
+	//	R_PORT_SR->P[19] = (uint8_t) ((R_PORT_SR->P[19]) ^ (0x40));
 	uint16_t temp = 0;
-	if (++s16u_cnt <= 10000)
-    {
-    	temp = s16u_cnt;// + (R_MTU->TDDRA>>1);
-    	if(temp > 6250)
-    	{
-    		temp = 6250;
-    		s16u_cnt = 0;
-    	}
 
-		R_MTU3->TGRD = temp; 
-		R_MTU4->TGRC = temp; 
-		R_MTU4->TGRD = temp; 
-		
-//		R_MTU4->TGRD = temp; 
-//		R_MTU3->TGRB = temp; 
-//		R_MTU4->TGRA = temp; 
-//		R_MTU4->TGRB = temp; 
+	//	if (++s16u_cnt <= 10000)
+	s16u_cnt++;
 
-		
-    }
-    else
+	if(s16u_cnt >= MTR_TC_HALF_CNT_NUM * 2)
+	{
 		s16u_cnt = 0;
+	}
+
+	{
+		temp = s16u_cnt;							// + (R_MTU->TDDRA>>1);
+
+		if(temp > MTR_TC_HALF_CNT_NUM)
+		{
+			temp = MTR_TC_HALF_CNT_NUM;
+			//			s16u_cnt = 0;
+		}
+
+#ifdef CMP_UPDATE_DIRECTLY
+		R_MTU3->TGRB = temp;
+		R_MTU4->TGRA = temp;
+		R_MTU4->TGRB = temp;
+
+
+#else
+		R_MTU3->TGRD = temp;
+		R_MTU4->TGRC = temp;
+		R_MTU4->TGRD = temp;
+
+
+#endif
+	}
+	//	  else
+	//		s16u_cnt = 0;
 }
 
 
