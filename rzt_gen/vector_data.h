@@ -5,13 +5,14 @@
 
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (2)
+        #define VECTOR_DATA_IRQ_COUNT    (0)
         #endif
         /* ISR prototypes */
-
-
-#define VECTOR_NUMBER_TCIV4 ((IRQn_Type) 93) /* TGIA3 (MTU3.TGRA input capture/compare match) */
-#define VECTOR_NUMBER_TCIV3 ((IRQn_Type) 88) /* TGIA3 (MTU3.TGRA input capture/compare match) */
+//void r_mtu4_tcive_interrupt(void);	
+//void r_mtu3_tcive_interrupt(void);
+//
+//#define VECTOR_NUMBER_TCIV4 ((IRQn_Type) 93) /* TGIA3 (MTU3.TGRA input capture/compare match) */
+//#define VECTOR_NUMBER_TCIV3 ((IRQn_Type) 88) /* TGIA3 (MTU3.TGRA input capture/compare match) */
 
 /* Vector table allocations */
         typedef enum IRQn {
@@ -38,8 +39,8 @@
             HypervisorTimerInt = -6,
             VirtualTimerInt = -5,
             NonSecurePhysicalTimerInt = -2,
-           	TGIV3_IRQn = 88, /* TCIV3 (MTU3.Overflow interrupt) */
-			TCIV4_IRQn = 93, /* TGIA3 (MTU3.TGRA input capture/compare match) */
+//           	TGIV3_IRQn = 88, /* TCIV3 (MTU3.Overflow interrupt) */
+//			TCIV4_IRQn = 93, /* TGIA3 (MTU3.TGRA input capture/compare match) */
             SHARED_PERIPHERAL_INTERRUPTS_MAX_ENTRIES = BSP_VECTOR_TABLE_MAX_ENTRIES
         } IRQn_Type;
         #endif /* VECTOR_DATA_H */
