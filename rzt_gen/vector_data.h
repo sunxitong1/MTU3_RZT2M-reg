@@ -2,17 +2,16 @@
         #ifndef VECTOR_DATA_H
         #define VECTOR_DATA_H
         #include "bsp_api.h"
-		//#include "Foc.h"
+
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (1)
+        #define VECTOR_DATA_IRQ_COUNT    (2)
         #endif
         /* ISR prototypes */
 
 
-void gpt_counter_overflow_isr(void);
-
-#define VECTOR_NUMBER_GPT1_OVF ((IRQn_Type) 131) /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+#define VECTOR_NUMBER_TCIV4 ((IRQn_Type) 93) /* TGIA3 (MTU3.TGRA input capture/compare match) */
+#define VECTOR_NUMBER_TCIV3 ((IRQn_Type) 88) /* TGIA3 (MTU3.TGRA input capture/compare match) */
 
 /* Vector table allocations */
         typedef enum IRQn {
@@ -39,7 +38,8 @@ void gpt_counter_overflow_isr(void);
             HypervisorTimerInt = -6,
             VirtualTimerInt = -5,
             NonSecurePhysicalTimerInt = -2,
-			GPT1_OVF_IRQn = 131, /* GPT1_OVF (GPT1 GTCNT overflow (GTPR compare match)) */
+           	TGIV3_IRQn = 88, /* TCIV3 (MTU3.Overflow interrupt) */
+			TCIV4_IRQn = 93, /* TGIA3 (MTU3.TGRA input capture/compare match) */
             SHARED_PERIPHERAL_INTERRUPTS_MAX_ENTRIES = BSP_VECTOR_TABLE_MAX_ENTRIES
         } IRQn_Type;
         #endif /* VECTOR_DATA_H */
